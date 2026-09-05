@@ -4,7 +4,7 @@ services:
     runtime: node
     plan: free
     region: oregon
-    buildCommand: bash -c 'npm install && cd frontend && npm install && npm run build && cd ..'
+    buildCommand: bash -c 'apt-get update && apt-get install -y ffmpeg && npm install && cd frontend && npm install && npm run build && cd ..'
     startCommand: npm start
     envVars:
       - key: NODE_VERSION
