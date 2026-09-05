@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="COARIFY">
+  <defs>
+    <linearGradient id="coarifyNavy" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#25406F"/>
+      <stop offset="100%" stop-color="#12203A"/>
+    </linearGradient>
+    <linearGradient id="coarifyGold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E9C863"/>
+      <stop offset="100%" stop-color="#B8912A"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Placa institucional COAR -->
+  <rect x="2" y="2" width="124" height="124" rx="30" fill="url(#coarifyNavy)"/>
+
+  <!-- "C" de COAR -->
+  <path d="M 96.7 91.4 A 44 44 0 1 1 96.7 32.6"
+        fill="none" stroke="url(#coarifyGold)" stroke-width="9" stroke-linecap="round"/>
+
+  <!-- Corchea -->
+  <g fill="url(#coarifyGold)">
+    <ellipse cx="57" cy="83" rx="12" ry="9" transform="rotate(-20 57 83)"/>
+    <rect x="65" y="36" width="5.5" height="47" rx="2.7"/>
+    <path d="M 70.5 36 C 85 41 94 49 94 62 C 92 53 84 47 70.5 47 Z"/>
+  </g>
+</svg>

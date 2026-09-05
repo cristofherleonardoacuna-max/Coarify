@@ -1,0 +1,306 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ------------------------------------------------------------------ */
+/*  Temas: cada uno redefine los mismos tokens                         */
+/* ------------------------------------------------------------------ */
+
+:root,
+[data-theme='dark'] {
+  --bg: #0b0f18;
+  --bg-elev: #131a28;
+  --bg-soft: #1a2233;
+  --border: #26304a;
+  --text: #eef2fb;
+  --text-dim: #94a0bb;
+  --accent: #d4af37;
+  --accent-2: #25406f;
+  --accent-ink: #10182a;
+  --shadow: 0 10px 34px -14px rgba(0, 0, 0, 0.8);
+}
+
+[data-theme='light'] {
+  --bg: #f5f7fb;
+  --bg-elev: #ffffff;
+  --bg-soft: #eaeff7;
+  --border: #d5dded;
+  --text: #12203a;
+  --text-dim: #5b6a88;
+  --accent: #1a2b4c;
+  --accent-2: #d4af37;
+  --accent-ink: #ffffff;
+  --shadow: 0 10px 30px -16px rgba(26, 43, 76, 0.35);
+}
+
+[data-theme='amoled'] {
+  --bg: #000000;
+  --bg-elev: #08090c;
+  --bg-soft: #101319;
+  --border: #1e2330;
+  --text: #ffffff;
+  --text-dim: #8b93a7;
+  --accent: #ffc63d;
+  --accent-2: #3a63ab;
+  --accent-ink: #000000;
+  --shadow: 0 10px 34px -14px rgba(0, 0, 0, 1);
+}
+
+/* El tema dinamico parte del oscuro; los acentos los inyecta JS
+   (colorExtractor) sobre :root como --accent / --accent-2. */
+[data-theme='dynamic'] {
+  --bg: #0a0d14;
+  --bg-elev: #141a26;
+  --bg-soft: #1b2231;
+  --border: #262f42;
+  --text: #f2f5fc;
+  --text-dim: #97a1b8;
+  --accent-ink: #0a0d14;
+  --shadow: 0 10px 34px -14px rgba(0, 0, 0, 0.85);
+}
+
+/* Transicion suave al cambiar de cancion o de tema */
+:root {
+  --accent-transition: 0.5s;
+}
+
+html {
+  color-scheme: dark;
+}
+[data-theme='light'] {
+  color-scheme: light;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Base                                                               */
+/* ------------------------------------------------------------------ */
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+
+  body {
+    @apply font-sans antialiased;
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    transition: background-color var(--accent-transition) ease, color var(--accent-transition) ease;
+    overscroll-behavior: none;
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+
+  /* Scrollbars discretas */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 99px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--text-dim);
+    background-clip: content-box;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  /* El input type="search" trae su propia X; usamos la nuestra. */
+  input[type='search']::-webkit-search-cancel-button,
+  input[type='search']::-webkit-search-decoration {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Componentes reutilizables                                          */
+/* ------------------------------------------------------------------ */
+
+@layer components {
+  .surface {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+  }
+
+  .btn-accent {
+    background: var(--accent);
+    color: var(--accent-ink);
+    transition: background-color var(--accent-transition) ease, transform 0.12s ease,
+      filter 0.15s ease;
+  }
+  .btn-accent:hover {
+    filter: brightness(1.08);
+  }
+  .btn-accent:active {
+    transform: scale(0.96);
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider;
+  }
+
+  .nav-link {
+    @apply flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors;
+    color: var(--text-dim);
+  }
+  .nav-link:hover {
+    color: var(--text);
+    background: var(--bg-soft);
+  }
+  .nav-link.is-active {
+    color: var(--accent-ink);
+    background: var(--accent);
+  }
+  [data-theme='light'] .nav-link.is-active {
+    color: #fff;
+  }
+
+  /* Marquesina para titulos largos */
+  .marquee > span {
+    display: inline-block;
+    white-space: nowrap;
+  }
+  .marquee:hover > span {
+    animation: marquee 9s linear infinite;
+  }
+}
+
+/* Barritas de "sonando ahora" */
+@keyframes eqBar {
+  0% {
+    height: 25%;
+  }
+  100% {
+    height: 100%;
+  }
+}
+
+@keyframes marquee {
+  0%,
+  10% {
+    transform: translateX(0);
+  }
+  90%,
+  100% {
+    transform: translateX(calc(-100% + 180px));
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Sliders (progreso y volumen)                                       */
+/* ------------------------------------------------------------------ */
+
+.coar-range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 16px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.coar-range::-webkit-slider-runnable-track {
+  height: 5px;
+  border-radius: 99px;
+  background: linear-gradient(
+    to right,
+    var(--accent) 0%,
+    var(--accent) var(--progress, 0%),
+    var(--border) var(--progress, 0%),
+    var(--border) 100%
+  );
+  transition: background-color var(--accent-transition) ease;
+}
+
+.coar-range::-moz-range-track {
+  height: 5px;
+  border-radius: 99px;
+  background: linear-gradient(
+    to right,
+    var(--accent) 0%,
+    var(--accent) var(--progress, 0%),
+    var(--border) var(--progress, 0%),
+    var(--border) 100%
+  );
+}
+
+.coar-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 13px;
+  height: 13px;
+  margin-top: -4px;
+  border-radius: 99px;
+  background: var(--accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 28%, transparent);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.coar-range::-moz-range-thumb {
+  width: 13px;
+  height: 13px;
+  border: none;
+  border-radius: 99px;
+  background: var(--accent);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.coar-range:hover::-webkit-slider-thumb,
+.coar-range:focus-visible::-webkit-slider-thumb {
+  opacity: 1;
+}
+.coar-range:hover::-moz-range-thumb,
+.coar-range:focus-visible::-moz-range-thumb {
+  opacity: 1;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Modo fiesta                                                        */
+/* ------------------------------------------------------------------ */
+
+.party-glow {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(
+      60% 50% at 20% 15%,
+      color-mix(in srgb, var(--accent) 22%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      55% 45% at 85% 80%,
+      color-mix(in srgb, var(--accent-2) 26%, transparent),
+      transparent 70%
+    );
+  opacity: var(--party-intensity, 0.35);
+  transition: opacity 0.12s linear;
+}
+
+/* Respeta a quien prefiere menos movimiento */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
